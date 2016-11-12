@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/home/andres/repositorios/calculos-antiestres/build-calculos-antiestres-Android_for_armeabi_v7a_GCC_4_9_Qt_5_6_1-Debug/android-build/libs/QtAndroid-bundled.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="d99b296d82be58b8e6c0738bad540e5150e48f83">
+        <dex dex="/home/andres/repositorios/calculos-antiestres/build-calculos-antiestres-Android_for_armeabi_v7a_GCC_4_9_Qt_5_6_1-Debug/android-build/build/intermediates/pre-dexed/debug/QtAndroid-bundled-c78f473aabeea5d42fc44121a6bb208a76de03ca.jar" />
+    </item>
+    <item
+        jar="/home/andres/repositorios/calculos-antiestres/build-calculos-antiestres-Android_for_armeabi_v7a_GCC_4_9_Qt_5_6_1-Debug/android-build/libs/QtAndroidAccessibility-bundled.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="5a33607d14aa0cf1af746dd313f7109c4e421f7a">
+        <dex dex="/home/andres/repositorios/calculos-antiestres/build-calculos-antiestres-Android_for_armeabi_v7a_GCC_4_9_Qt_5_6_1-Debug/android-build/build/intermediates/pre-dexed/debug/QtAndroidAccessibility-bundled-f0751de7e2d281110a7ede967b8ed0106b4fcdbc.jar" />
+    </item>
+
+</items>
