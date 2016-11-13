@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QtDebug>
+#include <math.h>
 
 qreal cant_canios,pulv,cant_picos;
 
@@ -18,15 +19,23 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 
-    ancho=ui->tab->width();
-    alto=ui->tab->height();
 
-    ranura=alto/10;
 
     //escena->setSceneRect(0,0,ancho,alto);
     ui->graphicsView->setScene(escena);
     //ui->graphicsView->setSceneRect(0,0,480,640);
     //ui->graphicsView->setDragMode(1);
+
+    alto=ui->graphicsView->height();
+    ancho=ui->graphicsView->width();
+
+    /*ancho=ui->tab->width();
+    alto=ui->tab->height();
+
+    ancho=ui->tabWidget->width();
+    alto=ui->tabWidget->height(); */
+
+    ranura=alto/10;
 
     ui->tabWidget->setTabText(0,"Ingreso de datos");
     ui->tabWidget->setTabText(1,"Grafico");
@@ -184,13 +193,26 @@ void MainWindow::on_pushButtonCalc_clicked()
         escena->addEllipse(-escala_2*diametro/2,-escala_2*diametro/2,escala_2*diametro,escala_2*diametro,bordes);
 
         int i,j;
-
+        qreal d_tmp;
         for(i=0;i<cant_canios;i++){
             escena->addEllipse(-escala_2*(diametro-pulv*(2*i+1))/2,-escala_2*(diametro-pulv*(2*i+1))/2,escala_2*(diametro-pulv*(2*i+1)),escala_2*(diametro-pulv*(2*i+1)),canios);
             //qDebug()<<(diametro-pulv*(2*i+1));
             //for(j=0)
             cant_picos=3.1416*(diametro-pulv*(2*i+1))/pulv;
-            qDebug()<<cant_picos;
+            cant_picos=qRound(cant_picos);
+            //qDebug()<<cant_picos;
+            d_tmp=(diametro-pulv*(2*i+1));
+            qDebug()<<d_tmp;
+
+            for(j=0;j<cant_picos;j++){
+                if(d_tmp<pulv/2){
+                    escena->addEllipse(-escala_2*pulv/2,-escala_2*pulv/2,escala_2*pulv,escala_2*pulv,pulve);
+                }else{
+                    escena->addEllipse(escala_2*(d_tmp/2*cos(j*2*3.1416/cant_picos)-pulv/2),escala_2*(d_tmp/2*sin(j*2*3.1416/cant_picos)-pulv/2),escala_2*pulv,escala_2*pulv,pulve);
+                }
+              /*  qDebug()<<d_tmp/2*cos(j*2*3.1416/cant_picos);
+                qDebug()<<d_tmp/2*sin(j*2*3.1416/cant_picos); */
+            }
         }
 
 
