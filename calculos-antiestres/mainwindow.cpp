@@ -4,7 +4,7 @@
 
 qreal cant_canios,pulv,cant_picos;
 
-int largo,ancho_2,diametro;
+qreal largo,ancho_2,diametro;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -23,8 +23,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ranura=alto/10;
 
-    escena->setSceneRect(0,0,ancho,alto);
+    //escena->setSceneRect(0,0,ancho,alto);
     ui->graphicsView->setScene(escena);
+    //ui->graphicsView->setSceneRect(0,0,480,640);
     //ui->graphicsView->setDragMode(1);
 
     ui->tabWidget->setTabText(0,"Ingreso de datos");
@@ -34,11 +35,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->radioCircular->setText("Circular");
     ui->radioCircular->setGeometry(0,ranura,ancho/2,ranura);
-    ui->radioCircular->setChecked(false);
+    ui->radioCircular->setChecked(true);
 
     ui->radioRectangular->setText("Rectangular");
     ui->radioRectangular->setGeometry(0,2*ranura,ancho/2,ranura);
-    ui->radioRectangular->setChecked(true);
+    ui->radioRectangular->setChecked(false);
 
     ui->labelPulv->setText("Diametro de cada Pulverizador");
     ui->labelPulv->setGeometry(0,3*ranura,ancho/2,ranura);
@@ -142,37 +143,99 @@ void MainWindow::on_pushButtonCalc_clicked()
     ui->tabWidget->setCurrentIndex(1);
     pulv=ui->lineEditPulv->text().toDouble();
 
+    QPen bordes,canios,pulve;
+
+    bordes.setWidth(4);
+    bordes.setColor(QColor(0,0,0));
+
+    canios.setWidth(3);
+    canios.setColor(QColor(0,0,255));
+
+    pulve.setWidth(3);
+    pulve.setColor(QColor(0,255,0));
+
+    escena->clear();
+
+    int alt,anc;
+    alt=ui->graphicsView->height();
+    anc=ui->graphicsView->width();
+
+    qreal escala,esc_x,esc_y,escala_2;
+
     if(ui->radioCircular->isChecked()){
-        diametro=ui->lineEditDiam->text().toInt();
+        diametro=ui->lineEditDiam->text().toDouble();
+        cant_canios=(qreal)diametro/pulv/2;
+        qDebug()<< cant_canios;
+        cant_canios=qRound(cant_canios);
+
+        esc_x=0.9*anc/(qreal)diametro;
+        esc_y=0.9*alt/(qreal)diametro;
+        if(esc_x>=esc_y){
+            escala=esc_y;
+        }else{
+            escala=esc_x;
+        }
+        escala_2=0.9*escala;
+
+        cant_picos=0;
+
+        escena->addLine(0,-alt/2,0,alt/2);
+        escena->addLine(-anc/2,0,anc/2,0);
+        escena->addEllipse(-escala_2*diametro/2,-escala_2*diametro/2,escala_2*diametro,escala_2*diametro,bordes);
+
+        int i,j;
+
+        for(i=0;i<cant_canios;i++){
+            escena->addEllipse(-escala_2*(diametro-pulv*(2*i+1))/2,-escala_2*(diametro-pulv*(2*i+1))/2,escala_2*(diametro-pulv*(2*i+1)),escala_2*(diametro-pulv*(2*i+1)),canios);
+            //qDebug()<<(diametro-pulv*(2*i+1));
+            //for(j=0)
+            cant_picos=3.1416*(diametro-pulv*(2*i+1))/pulv;
+            qDebug()<<cant_picos;
+        }
+
+
+
 
     }else{
-        ancho_2=ui->lineEditAncho->text().toInt();
-        largo=ui->lineEditLargo->text().toInt();
+        ancho_2=ui->lineEditAncho->text().toDouble();
+        largo=ui->lineEditLargo->text().toDouble();
         cant_canios=(qreal)ancho_2/pulv;
-        qDebug()<< qRound(cant_canios);
+        //qDebug()<< qRound(cant_canios);
+
 
         cant_picos=(int)cant_canios*(largo/pulv);
         qDebug()<<cant_picos;
-        int x0,y0,xf,yf;
-        x0=escena->height()/10;
-        xf=escena->height()-x0;
-        y0=escena->width()/10;
-        yf=escena->width()-y0;
-        //escena->addLine(0,0,5,10);
-       /* qDebug()<<x0;
-        qDebug()<<y0;
-        qDebug()<<xf;
-        qDebug()<<yf;
-        */
-        qDebug()<<escena->height();
-        qDebug()<<escena->width();
 
-        escena->addLine(100,100,ancho_2,100);
-        escena->addLine(100+ancho_2,100,100+ancho_2,largo);
 
-        qDebug()<<ui->graphicsView->height();
-        qDebug()<<ui->graphicsView->width();
 
+
+        esc_x=0.9*anc/(qreal)ancho_2;
+        esc_y=0.9*alt/(qreal)largo;
+        if(esc_x>=esc_y){
+            escala=esc_y;
+        }else{
+            escala=esc_x;
+        }
+        escala_2=0.9*escala/2;
+
+
+
+        escena->addLine(-escala_2*(qreal)ancho_2,-escala_2*(qreal)largo,escala_2*(qreal)ancho_2,-escala_2*(qreal)largo,bordes);
+        escena->addLine(escala_2*(qreal)ancho_2,-escala_2*(qreal)largo,escala_2*(qreal)ancho_2,escala_2*(qreal)largo,bordes);
+        escena->addLine(escala_2*(qreal)ancho_2,escala_2*(qreal)largo,-escala_2*(qreal)ancho_2,escala_2*(qreal)largo,bordes);
+        escena->addLine(-escala_2*(qreal)ancho_2,escala_2*(qreal)largo,-escala_2*(qreal)ancho_2,-escala_2*(qreal)largo,bordes);
+
+        int i,j;
+        for(i=0;i<(int)cant_canios;i++){
+            escena->addLine(-escala_2*(qreal)ancho_2+escala_2*(qreal)ancho_2/(int)cant_canios*(2.0*i+1.0),-0.95*escala*(qreal)largo/2,-escala_2*(qreal)ancho_2+escala_2*(qreal)ancho_2/(int)cant_canios*(2.0*i+1.0),escala_2*(qreal)largo,canios);
+            for(j=0;j<largo/pulv;j++){
+                if(i%2==0){
+                   escena->addEllipse(-escala_2*(qreal)ancho_2+escala_2*(qreal)ancho_2/(int)cant_canios*(2.0*i+1.0)-2*escala_2*pulv/2,-escala_2*(qreal)largo+escala_2*pulv*(2.0*j+1.0)-2*escala_2*pulv/2,2*escala_2*pulv,2*escala_2*pulv,pulve);
+                }else{
+                    escena->addEllipse(-escala_2*(qreal)ancho_2+escala_2*(qreal)ancho_2/(int)cant_canios*(2.0*i+1.0)-2*escala_2*pulv/2,-escala_2*(qreal)largo+escala_2*pulv*(2.0*j+1.0)-4*escala_2*pulv/2,2*escala_2*pulv,2*escala_2*pulv,pulve);
+                }
+            }
+        }
     }
 
 
